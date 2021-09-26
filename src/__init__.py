@@ -12,7 +12,7 @@ import traceback
 import unicodedata
 import uuid
 
-# サードパーティライブラリ
+# サードパーティライブラリ（アプリケーションによっては使わないライブラリもあるはずなので、アプリのPipfileと合わせて適時修正する）
 import dns.resolver as dns_resolver
 import flask
 import flask_mail
