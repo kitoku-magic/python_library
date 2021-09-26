@@ -1,0 +1,7 @@
+{% macro set_focus(id) %}
+<script type="text/javascript">
+  window.addEventListener('DOMContentLoaded', function() {
+    setFocus('{{ id }}');
+  });
+</script>
+{% endmacro %}

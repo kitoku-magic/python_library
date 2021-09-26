@@ -1,0 +1,21 @@
+[uwsgi]
+library_path = 共通ライブラリの基底ディレクトリのフルパス
+base_path = アプリケーションの基底ディレクトリのフルパス
+python-path = %(library_path)
+python-path = %(base_path)
+wsgi-file = %(base_path)/src/index.py
+callable = app
+master = true
+processes = 2
+uid = nginx
+gid = nginx
+socket = %(base_path)/socket/uwsgi.sock
+chmod-socket = 666
+logto = %(base_path)/log/uwsgi.log
+pidfile = %(base_path)/log/uwsgi.pid
+vacuum = true
+die-on-term = true
+thunder-lock = true
+enable-threads = true
+threads = 4
+py-autoreload = 1

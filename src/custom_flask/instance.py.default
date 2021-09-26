@@ -1,0 +1,42 @@
+class instance(object):
+    URI_SCHEME = 'URIスキーム'
+    HOST_NAME = 'ホスト名'
+    SQL_CONNECTION_STRING = 'mysql+mysqlconnector://{user}:{password}@{host}/{db_name}'
+    SQLALCHEMY_DATABASE_URI = SQL_CONNECTION_STRING.format(**{
+        'user': 'DBユーザー名',
+        'password': 'DBパスワード',
+        'host': 'DBホスト名',
+        'db_name': 'DBデータベース名'
+    })
+    SQLALCHEMY_ECHO = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SQLALCHEMY_ENGINE_OPTIONS = {'charset': 'utf8mb4', 'collation': 'utf8mb4_bin', 'autocommit': False, 'use_pure': False, 'buffered': False}
+    SQLALCHEMY_SESSION_OPTIONS = {'autocommit': False, 'autoflush': True}
+    MAIL_SERVER = 'メールサーバー名'
+    MAIL_PORT = ポート番号
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = 'メールユーザー名'
+    MAIL_PASSWORD = 'メールパスワード'
+    SENDER_MAIL_ADDRESS = '送信元メールアドレス'
+
+class testing(instance):
+    SECRET_KEY = 'シークレットキー'
+
+class development(instance):
+    SECRET_KEY = 'シークレットキー'
+    HOST_NAME = 'ホスト名'
+
+class production(instance):
+    SECRET_KEY = 'シークレットキー'
+    URI_SCHEME = 'URIスキーム'
+    HOST_NAME = 'ホスト名'
+    SQLALCHEMY_DATABASE_URI = instance.SQL_CONNECTION_STRING.format(**{
+        'user': 'DBユーザー名',
+        'password': 'DBパスワード',
+        'host': 'DBホスト名',
+        'db_name': 'DBデータベース名'
+    })
+    SQLALCHEMY_ECHO = False
+    MAIL_SERVER = 'メールサーバー名'
+    MAIL_USERNAME = 'メールユーザー名'
+    MAIL_PASSWORD = 'メールパスワード'

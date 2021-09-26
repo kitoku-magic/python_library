@@ -1,0 +1,53 @@
+from src import logging
+from src import logging_handlers
+from src import os
+from python_library.src import flask
+from python_library.src import flask_mail
+from python_library.src import jinja2
+from python_library.src.custom_flask.custom_filter import nl2br
+
+app_base_dir = 'アプリケーションの基底ディレクトリ'
+
+config_type = {
+    'testing':  'src.config.config.testing',
+    'development':  'src.config.config.development',
+    'production': 'src.config.config.production',
+    'default': 'src.config.config.development'
+}
+
+sensitive_config_type = {
+    'testing':  'src.instance.instance.testing',
+    'development':  'src.instance.instance.development',
+    'production': 'src.instance.instance.production',
+    'default': 'src.instance.instance.development'
+}
+
+app = flask.Flask(__name__)
+# 設定ファイルから情報読み込み
+app.config.from_object(config_type.get(os.getenv('FLASK_APP_ENV', 'default')))
+app.config.from_object(sensitive_config_type.get(os.getenv('FLASK_APP_ENV', 'default')))
+
+# ログの設定
+handler = logging_handlers.RotatingFileHandler(
+    app_base_dir + '/log/app.log',
+    maxBytes=app.config['LOG_MAX_BYTES'],
+    backupCount=app.config['LOG_BACKUP_COUNT']
+)
+handler.setFormatter(logging.Formatter("[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s"))
+handler.setLevel(app.config['LOG_LEVEL'])
+
+# ロガーを設定
+app.logger.addHandler(handler)
+
+# jinja2のtemplateディレクトリの場所を変更する
+# 省略した場合はこのファイルと同階層の "templates" になる
+jinja_environment = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.join(app_base_dir, 'template')),
+    autoescape=True,
+)
+jinja_environment.filters['nl2br'] = nl2br
+app.jinja_environment = jinja_environment
+
+# メール
+mail = flask_mail.Mail()
+mail.init_app(app)
